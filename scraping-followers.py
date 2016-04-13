@@ -22,8 +22,8 @@ logging.basicConfig(level=logging.DEBUG)
 s = requests.Session()
 #html_fb = s.get('https://www.facebook.com')
 data = {
-        'email' : 'shreyakupadhyay07@gmail.com',
-        'pass' : 'BlackHoleformat@123',
+        'email' : '',
+        'pass' : '',
         }
 headers = {
             ':authority':'www.facebook.com',
