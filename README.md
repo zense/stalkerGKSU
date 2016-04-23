@@ -1,2 +1,2 @@
 # stalkerGKSU
-making a portal for github URL
+It is a portal for finding github profiles of people related on the basis of organisations.
