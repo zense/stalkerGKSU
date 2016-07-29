@@ -1,11 +1,19 @@
+'''
+Author : Shreyak Upadhyay
+Email : shreyakupadhyay07@gmail.com
+Subject : getting data from github .
+Description:
+extracting followers using username of a user github account. For this I am using beautifulSoup and regex. 
+'''
+
 import requests
 from bs4 import BeautifulSoup
-import re
-from threading import Thread
+import sys
 
-html = requests.get('https://github.com/'+username+'/followers')
-htmltext = html.text
-soup = BeautifulSoup(htmltext,'lxml')
-results = soup.findAll('span',attrs={'class':'css-truncate css-truncate-target'})
-print results
-
+def getFollowers():
+	html = requests.get('https://github.com/'+sys.argv[1]+'/followers').text
+	soup = BeautifulSoup(html,'lxml')
+	for follower in soup.findAll('h3',attrs={'class':'follow-list-name'}):
+		print follower.span.a['href'] , follower.span.a.getText()
+		
+getFollowers()
