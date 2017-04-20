@@ -17,18 +17,27 @@ class user:
 
 def get_data(username, no):
 
-    if no==0:
-        z='followers'
+    if no == 0:
+        z = 'followers'
     else:
-        z='following'
+        z = 'following'
 
     organisation = ["IIIT Bangalore", "IIITB", "iiitb", "@iiitb2014", "International Institute of Information Technology", "IIIT-Bangalore", "IIIT-B", "IIIT BANGALORE", "IIIT Bangalore, Electronic City Phase 1, Bengaluru, Karnataka", "International Institute of Information Technology Bangalore", "International Institute of Information Technology, Bangalore"]
     s = requests.Session()
     r = s.get('https://github.com/' + username + '?tab='+z)
     soup = BeautifulSoup(r.text)
     data = soup.find_all("div", {"class" : "d-table col-12 width-full py-4 border-bottom border-gray-light"})
-    k = requests.Session()
+    pages = soup.find_all("div", {"class" : "pagination"})
     final=[]
+
+    x = 2
+    while(pages != []):
+        # print username, x
+        r = s.get('https://github.com/' + username + '?page=' +  str(x) + '&tab=' + z)
+        soup = BeautifulSoup(r.text)
+        data += soup.find_all("div", {"class" : "d-table col-12 width-full py-4 border-bottom border-gray-light"})
+        pages = soup.find_all("div", {"class" : "pagination"})
+        x += 1
 
     for i in data:
         name = i.find_all("a")[0]['href']
@@ -43,10 +52,10 @@ def get_data(username, no):
         final.append([name,company,area])
     return final
 
-def string_matching(name,area,organisations,main_list):
+def string_matching(name, mode, organisations, main_list):
     for org in organisations:
         try:
-            if(string.find(area,org) != -1):
+            if(string.find(mode,org) != -1):
                 if name not in main_list:
                     main_list.append(name)
         except:
@@ -58,7 +67,7 @@ def scrape(username ,main_list):
     primary = user(username, [], [])
     secondary = []
     checked_list.append("/" + username)
-    data=get_data(username,0)
+    data = get_data(username,0)
 
     for i in data:
         name = i[0]
