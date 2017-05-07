@@ -22,7 +22,6 @@ def get_data(username, no):
     else:
         z = 'following'
 
-    organisation = ["IIIT Bangalore", "IIITB", "iiitb", "@iiitb2014", "International Institute of Information Technology", "IIIT-Bangalore", "IIIT-B", "IIIT BANGALORE", "IIIT Bangalore, Electronic City Phase 1, Bengaluru, Karnataka", "International Institute of Information Technology Bangalore", "International Institute of Information Technology, Bangalore"]
     s = requests.Session()
     r = s.get('https://github.com/' + username + '?tab='+z)
     soup = BeautifulSoup(r.text)
@@ -32,7 +31,6 @@ def get_data(username, no):
 
     x = 2
     while(pages != []):
-        # print username, x
         r = s.get('https://github.com/' + username + '?page=' +  str(x) + '&tab=' + z)
         soup = BeautifulSoup(r.text)
         data += soup.find_all("div", {"class" : "d-table col-12 width-full py-4 border-bottom border-gray-light"})
@@ -55,7 +53,7 @@ def get_data(username, no):
 def string_matching(name, mode, organisations, main_list):
     for org in organisations:
         try:
-            if(string.find(mode,org) != -1):
+            if(mode in organisations):
                 if name not in main_list:
                     main_list.append(name)
         except:
@@ -63,7 +61,7 @@ def string_matching(name, mode, organisations, main_list):
 
 def scrape(username ,main_list):
 
-    organisation = ["IIIT Bangalore", "IIITB", "iiitb", "@iiitb2014", "International Institute of Information Technology", "IIIT-Bangalore", "IIIT-B", "IIIT BANGALORE", "IIIT Bangalore, Electronic City Phase 1, Bengaluru, Karnataka", "International Institute of Information Technology Bangalore", "International Institute of Information Technology, Bangalore"]
+    organisation = ["iiitb", "iiitbangalore", "internationalinstituteofinformationtechnologybangalore"]
     primary = user(username, [], [])
     secondary = []
     checked_list.append("/" + username)
@@ -71,8 +69,8 @@ def scrape(username ,main_list):
 
     for i in data:
         name = i[0]
-        company = i[1]
-        area = i[2]
+        company = (''.join(e for e in i[1] if e.isalpha())).lower()
+        area = (''.join(e for e in i[2] if e.isalpha())).lower()
         string_matching(name,area,organisation,main_list)
         string_matching(name,company,organisation,main_list)
 
@@ -80,8 +78,8 @@ def scrape(username ,main_list):
 
     for i in data:
         name = i[0]
-        company = i[1]
-        area = i[2]
+        company = (''.join(e for e in i[1] if e.isalpha())).lower()
+        area = (''.join(e for e in i[2] if e.isalpha())).lower()
         string_matching(name,area,organisation,main_list)
         string_matching(name,company,organisation,main_list)
 
@@ -93,16 +91,16 @@ def scrape(username ,main_list):
 
         for i in data:
             name = i[0]
-            company = i[1]
-            area = i[2]
+            company = (''.join(e for e in i[1] if e.isalpha())).lower()
+            area = (''.join(e for e in i[2] if e.isalpha())).lower()
             string_matching(name,area,organisation,main_list)
             string_matching(name,company,organisation,main_list)
         data = get_data(j,1)
 
         for i in data:
             name = i[0]
-            company = i[1]
-            area = i[2]
+            company = (''.join(e for e in i[1] if e.isalpha())).lower()
+            area = (''.join(e for e in i[2] if e.isalpha())).lower()
             string_matching(name,area,organisation,main_list)
             string_matching(name,company,organisation,main_list)
         primary.folllowers_node_list.append(temp_user)
@@ -118,8 +116,8 @@ def scrape(username ,main_list):
 
         for i in data:
             name = i[0]
-            company = i[1]
-            area = i[2]
+            company = (''.join(e for e in i[1] if e.isalpha())).lower()
+            area = (''.join(e for e in i[2] if e.isalpha())).lower()
             string_matching(name,area,organisation,main_list)
             string_matching(name,company,organisation,main_list)
 
@@ -129,8 +127,8 @@ def scrape(username ,main_list):
 
         for i in data:
             name = i[0]
-            company = i[1]
-            area = i[2]
+            company = (''.join(e for e in i[1] if e.isalpha())).lower()
+            area = (''.join(e for e in i[2] if e.isalpha())).lower()
             string_matching(name,area,organisation,main_list)
             string_matching(name,company,organisation,main_list)
 
@@ -138,7 +136,6 @@ def find(main_list,checked_list):
     for i in main_list:
         if i not in checked_list:
             scrape(i[1::],main_list)
-            checked_list.append(i)
 
 def main():
         main_list=[]
