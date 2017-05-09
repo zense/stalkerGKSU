@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import warnings
-import string
+
 warnings.filterwarnings("ignore")
 
 main_list = []
@@ -15,6 +15,7 @@ class user:
         self.folllowing_node_list = []
         self.folllowers_node_list = []
 
+
 def get_data(username, no):
 
     if no == 0:
@@ -22,21 +23,22 @@ def get_data(username, no):
     else:
         z = 'following'
 
+    # these lines of code gets the list of followers or the following on the first page
+    # when there are no further pages of followers or following. And if there are go forward with the next page
     s = requests.Session()
-    r = s.get('https://github.com/' + username + '?tab='+z)
-    soup = BeautifulSoup(r.text)
-    data = soup.find_all("div", {"class" : "d-table col-12 width-full py-4 border-bottom border-gray-light"})
-    pages = soup.find_all("div", {"class" : "pagination"})
     final=[]
-
-    x = 2
-    while(pages != []):
-        r = s.get('https://github.com/' + username + '?page=' +  str(x) + '&tab=' + z)
+    x = 1
+    pages = [""]
+    data = []
+    while(pages!=[]):
+        r = s.get('https://github.com/' + username + '?page=' +  str(x) + '&tab=' + z) #first getting all the followers for z=0, and following for z=1
         soup = BeautifulSoup(r.text)
-        data += soup.find_all("div", {"class" : "d-table col-12 width-full py-4 border-bottom border-gray-light"})
+        data = data + soup.find_all("div", {"class" : "d-table col-12 width-full py-4 border-bottom border-gray-light"})
         pages = soup.find_all("div", {"class" : "pagination"})
         x += 1
+  
 
+   # getting company and area.
     for i in data:
         name = i.find_all("a")[0]['href']
         try:
@@ -59,34 +61,31 @@ def string_matching(name, mode, organisations, main_list):
         except:
             pass
 
-def scrape(username ,main_list):
 
-    organisation = ["iiitb", "iiitbangalore", "internationalinstituteofinformationtechnologybangalore"]
+# scraping the github pages
+def scrape(username ,main_list):
+    organisation = ["iiitb", "iiitbangalore", "internationalinstituteofinformationtechnologybangalore","iiit","bangalore"]
     primary = user(username, [], [])
     secondary = []
     checked_list.append("/" + username)
-    data = get_data(username,0)
+    data = get_data(username,0)   #calling get_data function with the given username as input and 0 = followers.
+    data = data + get_data(username,1) #calling get_data function with the given username as input and 1 = followers.
+
+    # data contains all the links to the profile url fo the followers and following
 
     for i in data:
         name = i[0]
-        company = (''.join(e for e in i[1] if e.isalpha())).lower()
-        area = (''.join(e for e in i[2] if e.isalpha())).lower()
-        string_matching(name,area,organisation,main_list)
-        string_matching(name,company,organisation,main_list)
+        company = (''.join(e for e in i[1] if e.isalpha())).lower()  # removing all noise in the company name
+        area = (''.join(e for e in i[2] if e.isalpha())).lower()   # removing all noise in the area name
+        string_matching(name,area,organisation,main_list)  # checking area matches with the organisation or not
+        string_matching(name,company,organisation,main_list) # checking area matches with the organisation or not
 
-    data = get_data(username,1)
 
-    for i in data:
-        name = i[0]
-        company = (''.join(e for e in i[1] if e.isalpha())).lower()
-        area = (''.join(e for e in i[2] if e.isalpha())).lower()
-        string_matching(name,area,organisation,main_list)
-        string_matching(name,company,organisation,main_list)
-
+    # getting details about the first followers list.
     for j in primary.followers_list:
 
         checked_list.append(j)
-        data = get_data(j,0)
+        data = get_data(j,0) # getting data of the followers of the followers
         temp_user = user(j, [], [])
 
         for i in data:
@@ -95,7 +94,7 @@ def scrape(username ,main_list):
             area = (''.join(e for e in i[2] if e.isalpha())).lower()
             string_matching(name,area,organisation,main_list)
             string_matching(name,company,organisation,main_list)
-        data = get_data(j,1)
+        data = get_data(j,1) # getting data of the following of the followers
 
         for i in data:
             name = i[0]
@@ -111,7 +110,7 @@ def scrape(username ,main_list):
         if j not in checked_list:
             checked_list.append(j)
 
-        data = get_data(j,1)
+        data = get_data(j,1) # getting data of the following of the following
         temp_user = user(j, [], [])
 
         for i in data:
@@ -123,7 +122,7 @@ def scrape(username ,main_list):
 
         primary.folllowing_node_list.append(temp_user)
         secondary.append(temp_user)
-        data=get_data(j,0)
+        data=get_data(j,0) # getting data of the followers of the following
 
         for i in data:
             name = i[0]
@@ -135,14 +134,16 @@ def scrape(username ,main_list):
 def find(main_list,checked_list):
     for i in main_list:
         if i not in checked_list:
-            scrape(i[1::],main_list)
+            scrape(i[1::],main_list)  # recursion on every user who is not there in the main list.
 
 def main():
         main_list=[]
-        username = raw_input("Github username : ")
-        scrape(username,main_list)
+        username = raw_input("Github username : ") #getting username as input
+        scrape(username,main_list) 
         find(main_list,checked_list)
         print main_list
+        print len(main_list)
 
+# program starts from here
 if __name__ == '__main__':
         main()
