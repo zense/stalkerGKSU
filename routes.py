@@ -14,11 +14,13 @@ def query():
 		return render_template('query.html')
 	else:
 		organisation = request.form['organisation']
-		return get_nodes.main(organisation)
+		filename = organisation + ".html"
+		get_nodes.main(organisation)
+		return render_template(filename)
 
-@app.route("/contactus")
+@app.route("/aboutus")
 def contactus():
-    return render_template('contactUs.html')
+    return render_template('aboutUs.html')
 
 if __name__ == '__main__':
 	app.run(debug = True, port = 3000)
