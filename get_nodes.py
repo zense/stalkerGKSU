@@ -182,6 +182,7 @@ def creating_objs(main_list, org):
     filename = org + ".html"
     fullpath = os.path.join(os.getcwd(), "templates", filename)
     make_html(fullpath, table)
+    return items
 
 def main(org):
     main_list = []
@@ -191,7 +192,8 @@ def main(org):
     for i in range(len(organisation)):
         organisation[i] = (''.join(e for e in organisation[i] if e.isalpha())).lower()
     find(main_list, checked_list, organisation)
-    creating_objs(main_list, org)
+    items = creating_objs(main_list, org)
+    return items
 
 # program starts from here
 if __name__ == '__main__':
