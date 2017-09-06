@@ -4,11 +4,23 @@
     <title>Stalker</title>
     <link href = "/static/bootstrap.min.css" rel = "stylesheet">
     <link href = "/static/jumbotron-narrow.css" rel = "stylesheet">
-    <script src = "/static/utility.js"></script>
+    <!-- <link href = "/static/style.css" rel = "stylesheet"> -->
+    <style>
+    #loading {
+        width: 35px;
+        height: 35px;
+        display: none;
+        /*background: url("./static/loadingimage.gif") no-repeat;*/
+        cursor: wait;
+        }
+    </style>
   </head>
 
   <body>
-    <div class = "container">
+    <div id="loading">
+      <img src="./static/loadingimage.gif">
+    </div>
+    <div class = "container" id = "container">
       <div class = "header">
         <nav>
           <ul class = "nav nav-pills pull-right">
@@ -24,9 +36,9 @@
           <h2>Query</h2>
           <form class = "form-inline" action = {{url_for('query')}} method = 'post'>
             <div class = "form-group">
-              <input type = "text" class = "form-control" name = "organisation" id = "organisation" placeholder = "Organisation">
+              <input type = "text" class = "form-control" name = "organisation" id = "organisation" placeholder = "Organisation" autofocus>
             </div>
-            <input type = "submit" class = "btn-primary" onClick="alert_query_will_be_submitted()">        <!-- On keeping btn in class, the button is becoming very big -->
+            <input type = "submit" class = "btn-primary" onClick="loading();alert_query_will_be_submitted();">
           </form>
         </div>
       </div>
@@ -37,3 +49,4 @@
     </body>
 
 </html>
+<script type = "text/javascript" src = "/static/utility.js"></script>
