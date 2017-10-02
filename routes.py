@@ -3,6 +3,7 @@ import get_nodes
 from flask_sqlalchemy import SQLAlchemy
 from models import *
 import json
+import os
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -22,15 +23,14 @@ def query():
 	else:
 		organisation = request.form['organisation']
 		filename = organisation + ".html"
-		if(User.query.filter_by(organisation = organisation).all() == []):
+		info = db.session.query(User.github_username, User.name).filter_by(organisation = organisation).all()
+		if(info == []):
 			items = get_nodes.main(organisation)
 			for i in items:
 				usr = User(organisation,i.name,i.github_username)
 				db.session.add(usr)
 			db.session.commit()
 		else:
-			# info = json.loads(User.query.filter_by(organisation = organisation).all())
-			info = User.query.filter_by(organisation = organisation).all()
 			lists = []
 			for i in info:
 				lists.append([str(i.github_username), str(i.name)])
@@ -43,4 +43,6 @@ def contactus():
     return render_template('aboutUs.html')
 
 if __name__ == '__main__':
-	app.run(debug = True, port = 3000)
+	app.debug = True
+	port = int(os.environ.get("PORT", 5000))
+	app.run(host = "0.0.0.0", port = port)
