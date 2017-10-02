@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request
 import get_nodes
 from flask_sqlalchemy import SQLAlchemy
-from models import *
 import json
 import os
 
@@ -10,6 +9,8 @@ app.config.from_object('config')
 app.secret_key = "some_secret"
 
 db = SQLAlchemy(app)
+
+from models import *
 
 @app.route("/")
 @app.route("/home")
