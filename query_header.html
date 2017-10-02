@@ -1,7 +1,40 @@
-<!DOCTYPE html><html lang = "en"><head><title>Stalker</title><link href = "/static/bootstrap.min.css" rel = "stylesheet"><link href = "/static/jumbotron-narrow.css" rel = "stylesheet"><script src = "/static/utility.js"></script></head><body><div class = "container"><div class = "header"><nav><ul class = "nav nav-pills pull-right"><li role = "presentation"><a href="home">Home</a></li><li role = "presentation" class = "active"><a href = "#">Query</a></li><li role = "presentation"><a href ="aboutus">About Us</a></li></ul></nav><h1 class = "text-muted"><a href = "home">Stalker</a></h1></div><div class = "jumbotron"><div class = "row marketing"><h2>Query</h2><form class = "form-inline" action = {{url_for('query')}} method = 'post'><div class = "form-group"><input type = "text" class = "form-control" name = "organisation" id = "organisation" placeholder = "Organisation"></div><input type = "submit" class = "btn-primary" onClick="alert_query_will_be_submitted()">        <!-- Onkeeping btn in class, the button is becoming very big --></form></div></div>
-<style type="text/css">
-table {
-  border-collapse: separate;
-  border-spacing: 50px 0;
-}
-</style>
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+  <title>Stalker</title>
+  <link rel = "shortcut icon" href = "{{ url_for('static', filename = 'favicon.ico')}}">
+  <link href = "/static/bootstrap.min.css" rel = "stylesheet">
+  <link href = "/static/jumbotron-narrow.css" rel = "stylesheet">
+  <script src = "/static/utility.js"></script>
+</head>
+<body>
+  <div class = "container">
+    <div class = "header">
+      <nav>
+        <ul class = "nav nav-pills pull-right">
+          <li role = "presentation"><a href="home">Home</a></li>
+          <li role = "presentation" class = "active"><a href = "#">Query</a></li>
+          <li role = "presentation"><a href ="aboutus">About Us</a></li>
+        </ul>
+      </nav>
+      <h1 class = "text-muted">
+        <a href = "home">Stalker</a>
+      </h1>
+    </div>
+    <div class = "jumbotron">
+      <div class = "row marketing">
+        <h2>Query</h2>
+        <form class = "form-inline" action = {{url_for('query')}} method = 'post'>
+          <div class = "form-group">
+            <input type = "text" class = "form-control" name = "organisation" id = "organisation" placeholder = "Organisation">
+          </div>
+          <input type = "submit" class = "btn-primary" onClick="alert_query_will_be_submitted()">
+        </form>
+      </div>
+    </div>
+    <style type="text/css">
+    table {
+      border-collapse: separate;
+      border-spacing: 50px 0;
+    }
+    </style>
