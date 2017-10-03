@@ -1,6 +1,5 @@
 from routes import db
 import json
-# Define a base model for other database tables to inherit
 
 class User(db.Model):
 
@@ -13,7 +12,7 @@ class User(db.Model):
     name    = db.Column(db.String(128),  nullable=False)
 
     # Github username
-    github_username = db.Column(db.String(128), primary_key = True, nullable = False, unique = True)
+    github_username = db.Column(db.String(128), nullable = False)
 
     # New instance instantiation procedure
     def __init__(self, organisation, name, github_username):
