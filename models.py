@@ -5,6 +5,9 @@ class User(db.Model):
 
     __tablename__ = 'users'
 
+    # Serial Number
+    sno = db.Column(db.Integer, primary_key = True)
+
     # Organisation
     organisation = db.Column(db.String(128), nullable=False)
 
