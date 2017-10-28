@@ -172,7 +172,6 @@ def scrape(username, main_list, checked_list, organisation):
     for j in primary.following_list:
         if j not in checked_list:
             checked_list.append(j)
-        print "hello"
         data = get_data(j,1) # getting data of the following of the following
         temp_user = user(j, [], [])
         for i in data:
@@ -206,7 +205,6 @@ def get_json(org):
                 dt["target"]=k[1::]
                 dt["value"]=10
                 d["links"].append(dt)
-
     string_json = json.dumps(d)
     f = open("./static/" + org + ".json", "w")
     f.write(string_json)
@@ -234,7 +232,7 @@ def make_html(fullpath, table):
 def creating_objs(main_list, org):
     items = []
     for i in main_list:
-        items.append(Item(i[1],i[0],"https://github.com"+i[0]))
+        items.append(Item(i[1].encode('ascii', 'ignore'),i[0].encode('ascii', 'ignore'),"https://github.com"+i[0].encode('ascii', 'ignore')))
     table = ItemTable(items)
     filename = org + ".html"
     fullpath = os.path.join(os.getcwd(), "templates", filename)
