@@ -35,9 +35,8 @@ def query():
 			lists = []
 			for i in info:
 				lists.append([str(i.github_username), str(i.name)])
-
 			get_nodes.creating_objs(lists, organisation)
-		return render_template(filename)
+		return render_template(filename, organisation = str(organisation) + '.json')
 
 @app.route("/aboutus")
 def contactus():
