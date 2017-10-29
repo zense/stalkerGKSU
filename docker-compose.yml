@@ -1,3 +1,8 @@
+# Please note that this docker-compose file will not run as is. 
+# It is mainly meant for deploying stalker in production 
+# To use this you might consider running mysql separately with the following command 
+# docker run --name mysqldb -e MYSQL_ROOT_PASSWORD=thanks123 -d mysql     
+# Once mysql is running docker-compose up should work 
 web:
     build: .
     #image: tiangolo/uwsgi-nginx-flask:python2.7
