@@ -1,3 +1,4 @@
+html5lib==1.0b8
 itsdangerous==0.24
 click==6.6
 Werkzeug==0.11.8
