@@ -1,4 +1,3 @@
-html5lib==1.0b8
 itsdangerous==0.24
 click==6.6
 Werkzeug==0.11.8
@@ -17,6 +16,7 @@ Flask-SQLAlchemy==2.2
 Flask-Script==2.0.6
 python-editor==1.0.3
 six==1.10.0
+html5lib==1.0b8
 python-dateutil==2.6.0
 Mako==1.0.3
 alembic==0.9.5
