@@ -206,7 +206,8 @@ def get_json(org):
                 dt["value"]=10
                 d["links"].append(dt)
     string_json = json.dumps(d)
-    f = open("./static/" + org + ".json", "w")
+    filename = org + ".json"
+    f = open(os.path.join(os.getcwd(), "static", filename), "w")
     f.write(string_json)
     f.close()
 
