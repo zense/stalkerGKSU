@@ -1,0 +1,11 @@
+web:
+    build: .
+    #image: tiangolo/uwsgi-nginx-flask:python2.7
+    volumes:
+      - ./:/app
+    external_links:
+      - mysqldb
+    restart: always
+    ports:
+      - "8081:80"
+    container_name: stalker
