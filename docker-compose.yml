@@ -1,11 +1,24 @@
 web:
-    build: .
-    #image: tiangolo/uwsgi-nginx-flask:python2.7
-    volumes:
-      - ./:/app
-    external_links:
-      - mysqldb
-    restart: always
-    ports:
-      - "8081:80"
-    container_name: stalker
+  build: .
+  #image: tiangolo/uwsgi-nginx-flask:python2.7
+  volumes:
+    - ./:/app
+  external_links:
+    - mysqldb
+  links:
+    - redisdb
+  restart: always
+  ports:
+    - "8081:80"
+  container_name: stalker
+  environment:
+    - "REDISTOGO_URL=redis://redisdb:6379"
+    - "VIRTUAL_HOST=stalker.zense.co.in"
+redisdb:
+  image: redis
+
+# We are using an external link for mysql because we already have a mysql running for us in producton env
+# For local development environmnt you have to run a mysql container separately to make this work
+# Example:
+# docker run --name mysqldb -e MYSQL_ROOT_PASSWORD=thanks123 -d mysql
+# docker-compose up
