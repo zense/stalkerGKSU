@@ -10,6 +10,7 @@ warnings.filterwarnings("ignore")
 main_list = []
 checked_list = []
 graph = {}
+max_number = 150
 
 class ItemTable(Table):
     name = Col('Name')
@@ -42,7 +43,7 @@ def get_data(username, no):
     x = 1
     pages = [""]
     data = []
-    while(pages!=[]):
+    while(pages != [] and x <= max_number/50):
         r = s.get('https://github.com/' + username + '?page=' +  str(x) + '&tab=' + z) #first getting all the followers for z=0, and following for z=1
         soup = BeautifulSoup(r.text)
         data = data + soup.find_all("div", {"class" : "d-table col-12 width-full py-4 border-bottom border-gray-light"})
@@ -206,7 +207,8 @@ def get_json(org):
                 dt["value"]=10
                 d["links"].append(dt)
     string_json = json.dumps(d)
-    f = open("./static/" + org + ".json", "w")
+    filename = org + ".json"
+    f = open(os.path.join(os.getcwd(), "static", filename), "w")
     f.write(string_json)
     f.close()
 
@@ -244,7 +246,7 @@ def main(org):
     organisation = []
     checked_list = []
     scrape_org(org,main_list,organisation)
-    scrape_org_2(org,main_list,organisation)
+    # scrape_org_2(org,main_list,organisation)
     update_org_list(main_list,organisation)
     for i in range(len(organisation)):
         organisation[i] = (''.join(e for e in organisation[i] if e.isalpha())).lower()

@@ -32,9 +32,18 @@
 </head>
 <body>
   <div id="loading">
-    <img src="./static/loadingimage.gif" style="position : absolute; left:30%;bottom:25%;">
+    <img src="./static/loadingimage.gif">
   </div>
   <div class = "container" id = "container">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class = "alert alert-warning alert-dissmissible" role = "alert">
+            {{message}}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
     <div class = "header">
       <nav>
         <ul class = "nav nav-pills pull-right">
@@ -52,7 +61,8 @@
         <h2>Query</h2>
         <form class = "form-inline" action = {{url_for('query')}} method = 'post'>
           <div class = "form-group">
-            <input type = "text" class = "form-control" name = "organisation" id = "organisation" placeholder = "Organisation">
+            <input type = "text" class = "form-control" name = "organisation" id = "organisation" placeholder = "Organisation" autofocus>
+            <input type = "text" class = "form-control" name = "email_address" id = "email_address" placeholder = "E-Mail Address">
           </div>
           <input type = "submit" class = "btn-primary" onClick="loading();alert_query_will_be_submitted()">
         </form>
