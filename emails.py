@@ -1,7 +1,6 @@
 from flask_mail import Message
 from routes import mail
 import config
-from threading import Thread
 from routes import app
 
 def send_email(organisation, recipients):
