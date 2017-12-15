@@ -28,11 +28,13 @@ def home():
 
 def save_info(organisation, email_address):
 	key = str(uuid.uuid4())
-	items = get_nodes.main(organisation)
-	for i in items:
-		usr = User(organisation,i.name,i.github_username)
-		db.session.add(usr)
-	db.session.commit()
+	info = db.session.query(User.github_username, User.name).filter_by(organisation = organisation).all()
+	if(info == []):		# Another entry in the queue could have updated the DB
+		items = get_nodes.main(organisation)
+		for i in items:
+			usr = User(organisation,i.name,i.github_username)
+			db.session.add(usr)
+		db.session.commit()
 	emails.send_email(organisation, [email_address])
 	return key
 
@@ -45,7 +47,7 @@ def query():
 		info = db.session.query(User.github_username, User.name).filter_by(organisation = organisation).all()
 		if(info == []):
 			job = q.enqueue_call(
-				func="routes.save_info", args=(organisation, email_address, ), result_ttl=5000
+				func="routes.save_info", args=(organisation, email_address, ), result_ttl=5000, timeout=600
 			)
 			flash("We shall notify you at " + email_address + " when the processing is complete")
 		else:
