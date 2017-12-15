@@ -11,6 +11,7 @@ main_list = []
 checked_list = []
 graph = {}
 max_number = 150
+no_per_page = 50    # 50 people per page(approximate)
 
 class ItemTable(Table):
     name = Col('Name')
@@ -43,7 +44,7 @@ def get_data(username, no):
     x = 1
     pages = [""]
     data = []
-    while(pages != [] and x <= max_number/50):
+    while(pages != [] and x <= max_number/no_per_page):
         r = s.get('https://github.com/' + username + '?page=' +  str(x) + '&tab=' + z) #first getting all the followers for z=0, and following for z=1
         soup = BeautifulSoup(r.text)
         data = data + soup.find_all("div", {"class" : "d-table col-12 width-full py-4 border-bottom border-gray-light"})
@@ -103,7 +104,7 @@ def update_org_list(main_list,organisation):
              continue
     return organisation
 
-def scrape_org_2(org,main_list,organisation):
+def scrape_org_general(org,main_list,organisation):
     org.replace(" ","+")
     s = requests.Session()
     count = 1
@@ -246,7 +247,7 @@ def main(org):
     organisation = []
     checked_list = []
     scrape_org(org,main_list,organisation)
-    # scrape_org_2(org,main_list,organisation)
+    scrape_org_general(org,main_list,organisation)
     update_org_list(main_list,organisation)
     for i in range(len(organisation)):
         organisation[i] = (''.join(e for e in organisation[i] if e.isalpha())).lower()
