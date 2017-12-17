@@ -47,7 +47,7 @@ def query():
 		info = db.session.query(User.github_username, User.name).filter_by(organisation = organisation).all()
 		if(info == []):
 			job = q.enqueue_call(
-				func="routes.save_info", args=(organisation, email_address, ), result_ttl=5000, timeout=600
+				func="main.save_info", args=(organisation, email_address, ), result_ttl=5000, timeout=600
 			)
 			flash("We shall notify you at " + email_address + " when the processing is complete")
 		else:

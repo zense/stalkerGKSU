@@ -1,4 +1,4 @@
-from routes import db
+from main import db
 import json
 
 class User(db.Model):

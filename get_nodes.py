@@ -247,7 +247,7 @@ def main(org):
     organisation = []
     checked_list = []
     scrape_org(org,main_list,organisation)
-    scrape_org_general(org,main_list,organisation)
+    # scrape_org_general(org,main_list,organisation)
     update_org_list(main_list,organisation)
     for i in range(len(organisation)):
         organisation[i] = (''.join(e for e in organisation[i] if e.isalpha())).lower()
