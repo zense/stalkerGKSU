@@ -5,7 +5,7 @@ DEBUG = True
 import os
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
-SQLALCHEMY_DATABASE_URI = 'mysql://root:root@localhost/Stalker'
+SQLALCHEMY_DATABASE_URI = 'mysql://root:BlackHole@localhost/Stalker'
 DATABASE_CONNECT_OPTIONS = {}
 
 # Enable protection agains *Cross-site Request Forgery (CSRF)*
