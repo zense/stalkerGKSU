@@ -31,6 +31,8 @@ def save_info(organisation, email_address):
 	info = db.session.query(User.github_username, User.name).filter_by(organisation = organisation).all()
 	if(info == []):		# Another entry in the queue could have updated the DB
 		items = get_nodes.main(organisation)
+		org = Organisation(organisation)
+		db.session.add(org)
 		for i in items:
 			usr = User(organisation,i.name,i.github_username)
 			db.session.add(usr)
@@ -42,20 +44,25 @@ def save_info(organisation, email_address):
 def query():
 	if(request.method == 'POST'):
 		organisation = request.form['organisation']
+		organisation = organisation.lower()
 		email_address = request.form['email_address']
 		filename = organisation + ".html"
+		cached_org = db.session.query(Organisation.organisation).filter_by(organisation = organisation).all()
 		info = db.session.query(User.github_username, User.name).filter_by(organisation = organisation).all()
-		if(info == []):
+		if(info == [] and cached_org == []):
 			job = q.enqueue_call(
-				func="main.save_info", args=(organisation, email_address, ), result_ttl=5000, timeout=600
+				func="routes.save_info", args=(organisation, email_address, ), result_ttl=5000, timeout=600
 			)
 			flash("We shall notify you at " + email_address + " when the processing is complete")
-		else:
+		elif(info == [] and cached_org != []):
+			return render_template(filename, organisation=str(organisation)+'.json')
+		elif(info != [] and cached_org != []):
 			lists = []
 			for i in info:
 				lists.append([str(i.github_username), str(i.name)])
 			get_nodes.creating_objs(lists, organisation)
 			return render_template(filename, organisation=str(organisation)+'.json')
+
 	return render_template('query.html')
 
 @app.route("/aboutus")

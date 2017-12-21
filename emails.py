@@ -1,7 +1,7 @@
 from flask_mail import Message
-from main import mail
+from routes import mail
 import config
-from main import app
+from routes import app
 
 def send_email(organisation, recipients):
     sender = config.ADMINS[0]

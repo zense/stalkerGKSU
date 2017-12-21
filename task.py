@@ -2,7 +2,7 @@ from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 
 from config import SQLALCHEMY_DATABASE_URI
-from main import app, db
+from routes import app, db
 
 migrate = Migrate(app, db)
 

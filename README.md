@@ -32,5 +32,5 @@ $ redis-server
 $ python worker.py
 
 # the app
-$ python main.py
+$ python routes.py
 ```

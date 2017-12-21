@@ -217,7 +217,7 @@ def find(main_list, checked_list, organisation, org):
     for i in main_list:
         if i[0] not in checked_list:
             scrape(i[0][1::], main_list, checked_list, organisation)  # recursion on every user who is not there in the main list.
-    js = get_json(org)
+    get_json(org)
 
 def make_html(fullpath, table):
     f = open(fullpath, "w")
