@@ -26,3 +26,21 @@ class User(db.Model):
 
     def __repr__(self):
         return json.dumps([self.name, self.github_username])
+
+class Organisation(db.Model):
+
+    __tablename__ = 'organisations'
+
+    # Serial Number
+    sno = db.Column(db.Integer, primary_key = True)
+
+    # Organisation
+    organisation = db.Column(db.String(128), nullable=False)
+
+    # New instance instantiation procedure
+    def __init__(self, organisation):
+
+        self.organisation = organisation
+
+    def __repr__(self):
+        return json.dumps([self.organisation])

@@ -18,6 +18,7 @@ $ pip install -r requirements.txt
 $ python task.py db init
 $ python task.py db migrate
 $ python task.py db upgrade
+
 ```
 In case above commands gives error. Delete the migration folder and delete alembic_version table in the database. And run the above three commands again.
 ```sh
