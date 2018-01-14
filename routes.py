@@ -8,11 +8,16 @@ from rq.job import Job
 from worker import conn
 import uuid
 from flask_mail import Mail
+from flask_recaptcha import ReCaptcha
+import config
 
 app = Flask(__name__)
 app.config.from_object('config')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.config.update(dict(RECAPTCHA_ENABLED = True, RECAPTCHA_SITE_KEY = config.RECAPTCHA_SITE_KEY, RECAPTCHA_SECRET_KEY = config.RECAPTCHA_SECRET_KEY))
 app.secret_key = "some_secret"
+recaptcha = ReCaptcha()
+recaptcha.init_app(app)
 db = SQLAlchemy(app)
 mail = Mail(app)
 
@@ -43,26 +48,26 @@ def save_info(organisation, email_address):
 @app.route("/query", methods = ['GET', 'POST'])
 def query():
 	if(request.method == 'POST'):
-		organisation = request.form['organisation']
-		organisation = organisation.lower()
-		email_address = request.form['email_address']
-		filename = organisation + ".html"
-		cached_org = db.session.query(Organisation.organisation).filter_by(organisation = organisation).all()
-		info = db.session.query(User.github_username, User.name).filter_by(organisation = organisation).all()
-		if(info == [] and cached_org == []):
-			job = q.enqueue_call(
-				func="routes.save_info", args=(organisation, email_address, ), result_ttl=5000, timeout=600
-			)
-			flash("We shall notify you at " + email_address + " when the processing is complete")
-		elif(info == [] and cached_org != []):
-			return render_template(filename, organisation=str(organisation)+'.json')
-		elif(info != [] and cached_org != []):
-			lists = []
-			for i in info:
-				lists.append([str(i.github_username), str(i.name)])
-			get_nodes.creating_objs(lists, organisation)
-			return render_template(filename, organisation=str(organisation)+'.json')
-
+		if recaptcha.verify():
+			organisation = request.form['organisation']
+			organisation = organisation.lower()
+			email_address = request.form['email_address']
+			filename = organisation + ".html"
+			cached_org = db.session.query(Organisation.organisation).filter_by(organisation = organisation).all()
+			info = db.session.query(User.github_username, User.name).filter_by(organisation = organisation).all()
+			if(info == [] and cached_org == []):
+				job = q.enqueue_call(
+					func="routes.save_info", args=(organisation, email_address, ), result_ttl=5000, timeout=600
+				)
+				flash("We shall notify you at " + email_address + " when the processing is complete")
+			elif(info == [] and cached_org != []):
+				return render_template(filename, organisation=str(organisation)+'.json')
+			elif(info != [] and cached_org != []):
+				lists = []
+				for i in info:
+					lists.append([str(i.github_username), str(i.name)])
+				get_nodes.creating_objs(lists, organisation)
+				return render_template(filename, organisation=str(organisation)+'.json')
 	return render_template('query.html')
 
 @app.route("/aboutus")

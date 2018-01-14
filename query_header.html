@@ -64,6 +64,9 @@
             <input type = "text" class = "form-control" name = "organisation" id = "organisation" placeholder = "Organisation" autofocus>
             <input type = "text" class = "form-control" name = "email_address" id = "email_address" placeholder = "E-Mail Address">
           </div>
+          <div align="center">
+            {{ recaptcha }}
+          </div>
           <input type = "submit" class = "btn-primary" onClick="loading();alert_query_will_be_submitted()">
         </form>
       </div>

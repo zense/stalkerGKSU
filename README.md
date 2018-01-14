@@ -12,8 +12,13 @@ $ sudo apt-get install mysql-server
 $ pip install -r requirements.txt
 ```
 3. Create DB Stalker in mysql, change the password accordingly in `config.py`
-4. Share the email server credentials in `config.py`
-5. Migrate the DB tables
+4. Set the environment variables for reCAPTCHA
+```
+$ export RECAPTCHA_SITE_KEY="public key"
+$ export RECAPTCHA_SECRET_KEY="secret key"
+```
+5. Share the email server credentials in `config.py`
+6. Migrate the DB tables
 ```
 $ python task.py db init
 $ python task.py db migrate
