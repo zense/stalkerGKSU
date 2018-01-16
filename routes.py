@@ -55,6 +55,9 @@ def query():
 			filename = organisation + ".html"
 			cached_org = db.session.query(Organisation.organisation).filter_by(organisation = organisation).all()
 			info = db.session.query(User.github_username, User.name).filter_by(organisation = organisation).all()
+			db.session.commit()
+			db.session.flush()
+			db.session.expire_all()
 			if(info == [] and cached_org == []):
 				job = q.enqueue_call(
 					func="routes.save_info", args=(organisation, email_address, ), result_ttl=5000, timeout=600
