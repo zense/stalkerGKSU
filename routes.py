@@ -10,6 +10,7 @@ import uuid
 from flask_mail import Mail
 from flask_recaptcha import ReCaptcha
 import config
+import Counter
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -22,6 +23,7 @@ db = SQLAlchemy(app)
 mail = Mail(app)
 
 q = Queue(connection=conn)
+ctr = Counter.Counter()
 
 import emails
 from models import *
@@ -49,28 +51,31 @@ def save_info(organisation, email_address):
 def query():
 	if(request.method == 'POST'):
 		if recaptcha.verify():
-			organisation = request.form['organisation']
-			organisation = organisation.lower()
-			email_address = request.form['email_address']
-			filename = organisation + ".html"
-			cached_org = db.session.query(Organisation.organisation).filter_by(organisation = organisation).all()
-			info = db.session.query(User.github_username, User.name).filter_by(organisation = organisation).all()
-			db.session.commit()
-			db.session.flush()
-			db.session.expire_all()
-			if(info == [] and cached_org == []):
-				job = q.enqueue_call(
-					func="routes.save_info", args=(organisation, email_address, ), result_ttl=5000, timeout=600
-				)
-				flash("We shall notify you at " + email_address + " when the processing is complete")
-			elif(info == [] and cached_org != []):
-				return render_template(filename, organisation=str(organisation)+'.json')
-			elif(info != [] and cached_org != []):
-				lists = []
-				for i in info:
-					lists.append([str(i.github_username), str(i.name)])
-				get_nodes.creating_objs(lists, organisation)
-				return render_template(filename, organisation=str(organisation)+'.json')
+			if(ctr.check_query()):
+				organisation = request.form['organisation']
+				organisation = organisation.lower()
+				email_address = request.form['email_address']
+				filename = organisation + ".html"
+				cached_org = db.session.query(Organisation.organisation).filter_by(organisation = organisation).all()
+				info = db.session.query(User.github_username, User.name).filter_by(organisation = organisation).all()
+				db.session.commit()
+				db.session.flush()
+				db.session.expire_all()
+				if(info == [] and cached_org == []):
+					job = q.enqueue_call(
+						func="routes.save_info", args=(organisation, email_address, ), result_ttl=5000, timeout=600
+					)
+					flash("We shall notify you at " + email_address + " when the processing is complete")
+				elif(info == [] and cached_org != []):
+					return render_template(filename, organisation=str(organisation)+'.json')
+				elif(info != [] and cached_org != []):
+					lists = []
+					for i in info:
+						lists.append([str(i.github_username), str(i.name)])
+					get_nodes.creating_objs(lists, organisation)
+					return render_template(filename, organisation=str(organisation)+'.json')
+			else:
+				flash("The number of requests have been exhausted for the day")
 	return render_template('query.html')
 
 @app.route("/aboutus")
