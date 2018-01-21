@@ -10,7 +10,7 @@ import uuid
 from flask_mail import Mail
 from flask_recaptcha import ReCaptcha
 import config
-import Counter
+import counter
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -23,7 +23,7 @@ db = SQLAlchemy(app)
 mail = Mail(app)
 
 q = Queue(connection=conn)
-ctr = Counter.Counter()
+ctr = counter.Counter()
 
 import emails
 from models import *
