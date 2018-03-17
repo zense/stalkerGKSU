@@ -1,5 +1,6 @@
 # stalkerGKSU
 Portal for finding github profiles of people related on the basis of organisations.
+<br> The project is live [here](http://stalker.zense.co.in/)
 
 ## Requirements
 1. Install redis-server and mysql
@@ -48,3 +49,7 @@ $ python worker.py
 # the app
 $ python routes.py
 ```
+
+## Screenshot
+
+<img src="https://github.com/zense/stalkerGKSU/blob/master/Screenshot.png" width="630" height="630">
